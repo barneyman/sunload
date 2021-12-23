@@ -104,7 +104,7 @@ class sunloadInstance(SensorEntity):
         az=float(az.state)
         el=float(el.state)
 
-        _LOGGER.info("az {} el {}".format(az,el))
+        _LOGGER.info("{} az {} el {}".format(self._name,az,el))
 
         wrapFix=0
         self._inAzimuth=False
@@ -114,7 +114,7 @@ class sunloadInstance(SensorEntity):
             # has the potential to cross the border, so just rotate the world, consistently
             wrapFix=(360-self._azimuth_max)
 
-            _LOGGER.info("wrapping az {} min {} with {}".format(az, self._azimuth_min, wrapFix))
+            _LOGGER.info("{} wrapping az {} min {} with {}".format(self._name, az, self._azimuth_min, wrapFix))
 
             if (az+wrapFix)%360 <  self._azimuth_min+wrapFix:
                 self._inAzimuth=True
@@ -138,7 +138,7 @@ class sunloadInstance(SensorEntity):
         if self._inElevation and self._inAzimuth:
              self._state=True
 
-        _LOGGER.info("state is {}".format(self._state))
+        _LOGGER.info("{} state is {}".format(self._name, self._state))
 
 
         pass
