@@ -46,7 +46,7 @@ Restart your HA, then change `configuration/yaml`, then restart HA once again.
 Deleting the config entries will stop this code executng. When not used, the `sunload` 
 directory can be removed
 
-Example Config
+### Example Config
 ```
 sunload:
   instances:
@@ -63,6 +63,57 @@ sunload:
       elevation:
         min: 5
 ```        
+### Example Automation using above
+```
+- alias: reduce northside sunload
+  trigger:
+    # when sun is on the north face
+    platform: state
+    entity_id:
+      - sensor.sunload_northside
+    to: True
+
+  condition: 
+  # if i'm home and the forecast > 30 degs
+     - condition: and
+       conditions:
+        - condition: numeric_state 
+          # this is a temaplte sensor i created from {{ states.weather.beachhouse.attributes["temperature"] |float() }}
+          entity_id: sensor.forecast_temp
+          above: 30
+        - condition: state
+          entity_id:
+            - device_tracker.galaxy_note10
+          state: 'home'
+
+  action:
+    - service: cover.close_cover
+      entity_id: cover.north_blinds      
+  
+
+- alias: open northside sunload
+  trigger:
+    # when sun is off north face
+    platform: state
+    entity_id:
+      - sensor.sunload_northside
+    to: False
+  condition:
+  # if i'm home
+    - condition: state
+      entity_id:
+        - device_tracker.galaxy_note10
+      state: 'home'
+
+  action:
+    - service: cover.open_cover
+      entity_id: cover.north_blinds      
+
+
+
+````
+
+
 
 ## Appendix - Configuration Alternative
 
