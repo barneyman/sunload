@@ -1,7 +1,7 @@
 {
     "domain": "sunload",
-    "name": "barneyman's sun tracking and actions",
-    "documentation": "https://github.com/home-assistant/example-custom-config/tree/master/custom_components/example_sensor/",
+    "name": "barneyman's sun tracking and flagging",
+    "documentation": "https://github.com/barneyman/sunload/blob/main/README.md",
     "dependencies": ["sun"],
     "codeowners": [],
     "requirements": [],
