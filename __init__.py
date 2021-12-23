@@ -17,7 +17,7 @@ offSchema=vol.Schema({
 })
 
 # TODO enable checking
-CONFIG_SCHEMA_ = vol.Schema(
+CONFIG_SCHEMA = vol.Schema(
     {
         DOMAIN: vol.Schema(
             {
@@ -35,31 +35,6 @@ CONFIG_SCHEMA_ = vol.Schema(
                                 vol.Optional("max"): vol.All(vol.Coerce(float), vol.Range(min=0, max=90))
                             }),
 
-
-                            # vol.Required("presence_binary"): cv.string,  
-                            # vol.Required("lux_sensor"): cv.string,
-                            # vol.Required("off_scene"): cv.string,
-                            # "softOff":offSchema,
-                            # "hardOff":offSchema,
-                            # "reset":offSchema,
-
-                            # vol.Optional("jitter", default=30):vol.All(
-                            #         vol.Coerce(float), vol.Range(min=0, max=50)
-                            #     ),
-                            # "absent": vol.Schema({
-                            #     vol.Optional("unlit_scene"): cv.string,
-                            #     vol.Optional("lit_scene"): cv.string,
-                            #     vol.Required("minLux"): vol.All(
-                            #         vol.Coerce(float), vol.Range(min=0, max=100)
-                            #     ),
-                            # }),
-                            # "present": vol.Schema({
-                            #     vol.Optional("unlit_scene"): cv.string,
-                            #     vol.Optional("lit_scene"): cv.string,
-                            #     vol.Required("minLux"): vol.All(
-                            #         vol.Coerce(float), vol.Range(min=0, max=100)
-                            #     ),
-                            # }),
                         }
                     ]
                 )
