@@ -18,7 +18,7 @@ this platform together.
 
 ## Sensors
 ### Names
-Creates a number of sensors from `sun.sun`
+Creates a number of sensors from `sun.sun` attributes
 - `sensor.sunload_elevation`
 - `sensor.sunload.azimuth`
 
@@ -47,6 +47,7 @@ git clone https://github.com/barneyman/sunload.git
 ```
 
 Restart your HA, then change `configuration/yaml`, then restart HA once again - HA **will** complain about the addon being 
+untested by their team.
 
 Deleting the config entries will stop this code executng. When not used, the `sunload` 
 directory can be removed
