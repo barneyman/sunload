@@ -22,6 +22,9 @@ Creates a number of sensors from `sun.sun`
 - `sensor.sunload_elevation`
 - `sensor.sunload.azimuth`
 
+tip: you can add these sensors to a Sensor Card in the UI so you're not guessing where the 
+sun is right now 
+
 Every `instance` gets a sensor of the form `"sensor.sunload_{}".format(INSTANCE_NAME)`
 
 ### Values
@@ -35,13 +38,15 @@ Each of these instance sensors has the following attributes
 This code needs to run **on** your HA installation, if you're uncomfortable with that, 
 have a look at the appendix below
 
+** this code is freshly minted so it's gonna have bugs! **
+
 Shell to the `config/custom_components` directory on your HA install, then clone this
 repo
 ```
 git clone https://github.com/barneyman/sunload.git
 ```
 
-Restart your HA, then change `configuration/yaml`, then restart HA once again.
+Restart your HA, then change `configuration/yaml`, then restart HA once again - HA **will** complain about the addon being 
 
 Deleting the config entries will stop this code executng. When not used, the `sunload` 
 directory can be removed
