@@ -21,6 +21,9 @@ CONFIG_SCHEMA = vol.Schema(
     {
         DOMAIN: vol.Schema(
             {
+                vol.Required("tempsensor"): cv.string,
+                vol.Required("threshold"): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
+
                 vol.Required("instances"): vol.All(
                     cv.ensure_list,
                     [

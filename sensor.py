@@ -1,5 +1,5 @@
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.const import TEMP_CELSIUS
+from homeassistant.const import TEMP_CELSIUS, STATE_UNKNOWN
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
@@ -47,10 +47,13 @@ async def async_setup_platform(
     # walk thru the config
     newSensors=[]
 
+    tempSensor=config["tempsensor"]
+    threshold=config["threshold"]
+
     if "instances" in config:
 
         for instance in config["instances"]:
-            newinstance=sunloadInstance(hass,instance)
+            newinstance=sunloadInstance(hass,instance, tempSensor, threshold)
             _LOGGER.info("adding instance {}".format(newinstance.name))
             newSensors.append(newinstance)
 
@@ -62,7 +65,7 @@ async def async_setup_platform(
 
 class sunloadInstance(SensorEntity):
 
-    def __init__(self, hass, config) -> None:
+    def __init__(self, hass, config, tempsensor, threshold) -> None:
         
         _LOGGER.info("sunloadInstance init {}".format(config))
 
@@ -72,6 +75,9 @@ class sunloadInstance(SensorEntity):
 
         self._inAzimuth=None
         self._inElevation=None
+
+        self._tempsensor=tempsensor
+        self._threshold=threshold
 
         # get the deets
         # azimuth
@@ -98,8 +104,9 @@ class sunloadInstance(SensorEntity):
         az=self._hass.states.get("sensor.sunload_azimuth")
         el=self._hass.states.get("sensor.sunload_elevation")
 
-        if az is None or el is None:
+        if az is None or el is None or az.state==STATE_UNKNOWN or el.state==STATE_UNKNOWN:
             return
+
 
         az=float(az.state)
         el=float(el.state)
@@ -133,15 +140,17 @@ class sunloadInstance(SensorEntity):
             if el > self._elevation_max:
                 self._inElevation=False
         
+        # ok - now check the temp
+        ctemp=self._hass.states.get(self._tempsensor)
 
-        self._state=False
-        if self._inElevation and self._inAzimuth:
-             self._state=True
+        if ctemp is not None and ctemp.state != STATE_UNKNOWN:
 
-        _LOGGER.info("{} state is {}".format(self._name, self._state))
+            self._state=False
+            if self._inElevation and self._inAzimuth and float(ctemp.state)>self._threshold:
+                self._state=True
 
+            _LOGGER.info("{} state is {}".format(self._name, self._state))
 
-        pass
 
     @property
     def name(self) -> str:
