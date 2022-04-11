@@ -1,5 +1,5 @@
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.const import TEMP_CELSIUS, STATE_UNKNOWN
+from homeassistant.const import TEMP_CELSIUS, STATE_UNKNOWN, STATE_UNAVAILABLE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
@@ -143,7 +143,7 @@ class sunloadInstance(SensorEntity):
         # ok - now check the temp
         ctemp=self._hass.states.get(self._tempsensor)
 
-        if ctemp is not None and ctemp.state != STATE_UNKNOWN:
+        if ctemp is not None and ctemp.state not in [STATE_UNKNOWN, STATE_UNAVAILABLE]:
 
             self._state=False
             if self._inElevation and self._inAzimuth and float(ctemp.state)>self._threshold:
