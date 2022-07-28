@@ -7,7 +7,7 @@ blueprints easier to use.
 
 ## Why a platform?
 It was the longest day, Dec 21, 2021, and the sun was pouring through the loungeroom 
-window - "About time I wrote that automation to close the blinds on a 40degC day"
+window - "About time I wrote that automation to close the blinds on a 30degC day"
 
 I originally tried to do this entirely as a blueprint but quickly realised automations 
 are not really great at `choose`, the automations can be made significantly simpler if
@@ -36,9 +36,11 @@ Each of these instance sensors has the following attributes
 
 ## Installation
 This code needs to run **on** your HA installation, if you're uncomfortable with that, 
-have a look at the appendix below
+have a look at the appendix below which has a simpler implementation
 
-** this code is freshly minted so it's gonna have bugs! **
+***
+this code is freshly minted so it's gonna have bugs!
+***
 
 Shell to the `config/custom_components` directory on your HA install, then clone this
 repo
@@ -84,7 +86,7 @@ sunload:
      - condition: and
        conditions:
         - condition: numeric_state 
-          # this is a temaplte sensor i created from {{ states.weather.beachhouse.attributes["temperature"] |float() }}
+          # this is a template sensor i created from {{ states.weather.beachhouse.attributes["temperature"] |float() }}
           entity_id: sensor.forecast_temp
           above: 30
         - condition: state
@@ -121,7 +123,7 @@ sunload:
 
 
 
-## Appendix - Configuration Alternative
+## Appendix - Configuration ONLY Alternative
 
 ### Attributes exposed as Sensors
 ```
