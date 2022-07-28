@@ -58,17 +58,21 @@ directory can be removed
 ```
 sunload:
   instances:
+    # this will create sensor.sunload_northside
     - name: northside
       azimuth:
         min: 70
         max: 350
       elevation:
+        # min and max for elevation are optional
         min: 5
+    # this will create sensor.sunload_southside
     - name: southside
       azimuth:
         min: 330
         max: 270
       elevation:
+        # min and max for elevation are optional
         min: 5
 ```        
 ### Example Automation using above
