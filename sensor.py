@@ -83,7 +83,7 @@ class sunloadInstance(SensorEntity):
         _LOGGER.info("sunloadInstance init %s", (config))
 
         self._name = "{}_{}".format(DOMAIN, config["name"])
-        self._state = None
+        self._attr_native_value = None
         self._hass = hass
 
         self._inAzimuth = None
@@ -168,25 +168,20 @@ class sunloadInstance(SensorEntity):
 
         if ctemp is not None and ctemp.state not in [STATE_UNKNOWN, STATE_UNAVAILABLE]:
 
-            self._state = False
+            self._attr_native_value = False
             if (
                 self._inElevation
                 and self._inAzimuth
                 and float(ctemp.state) > self._threshold
             ):
-                self._state = True
+                self._attr_native_value = True
 
-            _LOGGER.info("%s state is %s", self._name, self._state)
+            _LOGGER.info("%s state is %s", self._name, self._attr_native_value)
 
     @property
     def name(self) -> str:
         """Return the name of the sensor."""
         return self._name
-
-    # @property
-    # def state(self):
-    #     """Return the state of the sensor."""
-    #     return self._state
 
     @property
     def extra_state_attributes(self):  # -> Mapping[str, Any] | None:
