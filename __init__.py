@@ -24,6 +24,9 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Required("threshold"): vol.All(
                     vol.Coerce(float), vol.Range(min=0, max=100)
                 ),
+                vol.Required("jitter"): vol.All(
+                    vol.Coerce(float), vol.Range(min=0, max=5)
+                ),
                 vol.Required("instances"): vol.All(
                     cv.ensure_list,
                     [

@@ -63,11 +63,12 @@ async def async_setup_platform(
 
     tempSensor = config["tempsensor"]
     threshold = config["threshold"]
+    jitter = config["jitter"]
 
     if "instances" in config:
 
         for instance in config["instances"]:
-            newinstance = sunloadInstance(hass, instance, tempSensor, threshold)
+            newinstance = sunloadInstance(hass, instance, tempSensor, threshold,jitter)
             _LOGGER.info("adding instance %s", (newinstance.name))
             newSensors.append(newinstance)
 
@@ -78,7 +79,7 @@ async def async_setup_platform(
 
 
 class sunloadInstance(SensorEntity):
-    def __init__(self, hass, config, tempsensor, threshold) -> None:
+    def __init__(self, hass, config, tempsensor, threshold, jitter) -> None:
 
         _LOGGER.info("sunloadInstance init %s", (config))
 
@@ -91,6 +92,7 @@ class sunloadInstance(SensorEntity):
 
         self._tempsensor = tempsensor
         self._threshold = threshold
+        self._jitter=jitter
 
         # get the deets
         # azimuth
@@ -133,7 +135,7 @@ class sunloadInstance(SensorEntity):
         wrapFix = 0
         self._inAzimuth = False
 
-        # have to spot crossing thr 0/360 line
+        # have to spot crossing the 0/360 line
         if self._azimuth_max > self._azimuth_min:
             # has the potential to cross the border, so just rotate the world, consistently
             wrapFix = 360 - self._azimuth_max
@@ -168,6 +170,23 @@ class sunloadInstance(SensorEntity):
 
         if ctemp is not None and ctemp.state not in [STATE_UNKNOWN, STATE_UNAVAILABLE]:
 
+            current_sunload=self._attr_native_value
+
+            if (
+                self._inElevation
+                and self._inAzimuth
+            ):
+                # sun is causing load (or unk)
+                if current_sunload == True or current_sunload is None:
+                    if float(ctemp.state)<(self._threshold-self._jitter):
+                        self._attr_native_value=False
+                else:
+                    if float(ctemp.state)>(self._threshold):
+                        self._attr_native_value=True
+    
+                _LOGGER.info("%s state is %s", self._name, self._attr_native_value)
+
+
             self._attr_native_value = False
             if (
                 self._inElevation
@@ -176,7 +195,6 @@ class sunloadInstance(SensorEntity):
             ):
                 self._attr_native_value = True
 
-            _LOGGER.info("%s state is %s", self._name, self._attr_native_value)
 
     @property
     def name(self) -> str:
