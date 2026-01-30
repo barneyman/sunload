@@ -177,23 +177,19 @@ class sunloadInstance(SensorEntity):
                 and self._inAzimuth
             ):
                 # sun is causing load (or unk)
-                if current_sunload == True or current_sunload is None:
+                if current_sunload is True or current_sunload is None:
                     if float(ctemp.state)<(self._threshold-self._jitter):
                         self._attr_native_value=False
                 else:
                     if float(ctemp.state)>(self._threshold):
                         self._attr_native_value=True
     
-                _LOGGER.info("%s state is %s", self._name, self._attr_native_value)
+            else:
+                self._attr_native_value=False
+
+            _LOGGER.info("%s state is %s (from %s)", self._name, self._attr_native_value,current_sunload)
 
 
-            self._attr_native_value = False
-            if (
-                self._inElevation
-                and self._inAzimuth
-                and float(ctemp.state) > self._threshold
-            ):
-                self._attr_native_value = True
 
 
     @property
